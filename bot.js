@@ -41,14 +41,17 @@ bot.on("messageCreate", (chat) => {
      //メモ機能(記録しちゃおうぜてきな)
      if(chat.content.match(/これを覚えて:/)) {
        memo = chat.content.replace("これを覚えて:", "")
-       fs.writeFile(chat.author.mention + ".txt" , memo , function(err) {
+       author = chat.author.mention.replace(/<@|>/g, "")
+
+       fs.writeFile(author + ".txt" , memo , function(err) {
          console.log(err)
        })
        bot.createMessage(chat.channel.id, chat.author.mention + "ちゃんのメモ書き:" + memo + "を保存したよ！");
      }
      if(chat.content.match(/ちゃんの言っていたこと/)) {
+       readusername = chat.content.replace(/ちゃんの言っていたこと|<@|>|!/g, "")
        username = chat.content.replace("ちゃんの言っていたこと", "")
-       fs.readFile(username + ".txt" , "utf8" , function(err, text) {
+       fs.readFile(readusername + ".txt" , "utf8" , function(err, text) {
          console.log(err)
          bot.createMessage(chat.channel.id, username + "ちゃんが言ってたのは:「" + text + "」だよ！")
        })
