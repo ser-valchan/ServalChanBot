@@ -41,7 +41,7 @@ bot.on("messageCreate", (chat) => {
      //メモ機能(記録しちゃおうぜてきな)
      if(chat.content.match(/これを覚えて:/)) {
        memo = chat.content.replace("これを覚えて:", "")
-       fs.writeFile(chat.author.username + ".txt" , memo , function(err) {
+       fs.writeFile(chat.author.mention + ".txt" , memo , function(err) {
          console.log(err)
        })
        bot.createMessage(chat.channel.id, chat.author.mention + "ちゃんのメモ書き:" + memo + "を保存したよ！");
