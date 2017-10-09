@@ -64,6 +64,12 @@ bot.on("messageCreate", (chat) => {
        ss = date.toFormat("SS")
        bot.createMessage(chat.channel.id, "今は" + hh + ":" + mi + ":" + ss + "だよ！")
      }
+     if(chat.content.match(/って言って/)) {
+      say = chat.content.replace("って言って", "")
+      bot.createMessage(chat.channel.id, say)
+     }
+
+     //--------------------------------------if u add
    }
 });
 
