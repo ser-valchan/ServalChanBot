@@ -28,6 +28,9 @@ bot.on("messageCreate", (chat) => {
        NotToDo.valve = chat.content.replace("ないでください！" , "")
        bot.createMessage(chat.channel.id, NotToDo.valve + "ないよ！")
      }
+     if(chat.content == "すっごーい") {
+       bot.createMessage(chat.channel.id, "すごいすごーい！")
+     }
      if(chat.content == "歌って") {
        bot.createMessage(chat.channel.id, "hidekiちゃん、" + chat.author.mention + "ちゃんが歌ってって言ってるよ！早く歌ってよー！")
      }
