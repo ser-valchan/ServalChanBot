@@ -34,6 +34,9 @@ bot.on("messageCreate", (chat) => {
      if(chat.content == "歌って") {
        bot.createMessage(chat.channel.id, "hidekiちゃん、" + chat.author.mention + "ちゃんが歌ってって言ってるよ！早く歌ってよー！")
      }
+     if(chat.content == "すっごーい") {
+       bot.createMessage(chat.channel.id, "すごいすごーい！")
+     }
      //ここまでのif-thenの中身は消してくださってかまいません。
      if(chat.content.match("私は何のフレンズ")) {
        bot.createMessage(chat.channel.id, "あなたの名前は" + chat.author.mention + "だよ！アイコンは...これかな?" + chat.author.avatarURL)
@@ -81,3 +84,15 @@ bot.on("guildMemberRemove", (guild, member) => {
     bot.createMessage(runch, member.mention + "さんが退出しました。 \n今までありがとう！また来てね！");//変更できます。
 });
 bot.connect();
+hannel.id, "hidekiさん、" + chat.author.mention + "ちゃんが歌ってって言ってるよ！早く歌ってよー！")
+     }
+     //ここまでのif-thenの中身は消してくださってかまいません。
+     if(chat.content.match("私は何のフレンズ")) {
+       bot.createMessage(chat.channel.id, "あなたの名前は" + chat.author.mention + "だよ！アイコンは...これかな?" + chat.author.avatarURL)
+     }
+   }
+});
+
+bot.on("guildMemberAdd", (joind, member) => {
+  bot.createMessage(runch, member.mention + "さん、雑談用Discordようこそ！ \nまずは#welcomeチャンネルと公式Wikiを見てルールを確認してね！")//変更できます。
+    member.addRole(online, "join")//joinって書いてある部分は変更可能
