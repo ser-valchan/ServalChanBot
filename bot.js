@@ -42,7 +42,7 @@ bot.on("messageCreate", (chat) => {
        bot.createMessage(chat.channel.id, "すごいすごーい！")
      }
      if(chat.content == "歌って") {
-       bot.createMessage(chat.channel.id, "hidekiちゃん、" + chat.author.mention + "ちゃんが歌ってって言ってるよ！早く歌ってよー！")
+       bot.createMessage(chat.channel.id, "<@!242183143564640258>ちゃん、" + chat.author.mention + "ちゃんが歌ってって言ってるよ！早く歌ってよー！")
      }
      //ここまでのif-thenの中身は消してくださってかまいません。
      if(chat.content.match("私は何のフレンズ")) {
