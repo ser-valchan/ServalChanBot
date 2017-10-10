@@ -30,7 +30,15 @@ bot.on("messageCreate", (chat) => {
      }
      if(chat.content.match(/私は|のフレンズです/g)) {
        Friends = chat.content.replace(/私は|のフレンズです/g, "")
-       bot.createMessage(chat.channel.id, "すっごーい！あなたは"+ Friends + "のフレンズなんだね！")
+       readusername = chat.author.id.replace(/<@|>|!| |/g, "") + "-callname"
+       fs.readFile(readusername + ".txt" , "utf8" , function(err, nick) {
+           console.log(err)
+           if(nick == undefined) {
+             bot.createMessage(chat.channel.id, "すっごーい！あなたは" + Friends + "のフレンズなんだね！")
+           } else {
+             bot.createMessage(chat.channel.id, "すっごーい！" + nick + "ちゃんは" + Friends + "のフレンズなんだね！")
+         }})
+       }
      }
      if(chat.content == "すっごーい") {
        bot.createMessage(chat.channel.id, "すごいすごーい！")
@@ -52,6 +60,17 @@ bot.on("messageCreate", (chat) => {
        })
        bot.createMessage(chat.channel.id, chat.author.mention + "ちゃんのメモ書き:" + memo + "を保存したよ！");
      }
+     if(chat.content.match(/って呼んで/)) {
+       callme = chat.content.replace("って呼んで", "")
+       if(memo == "って呼んで") {
+         bot.createMessage(chat.channel.id, "ちゃんとした名前を教えて！")
+       } else {
+       author = chat.author.mention.replace(/<@|>/g, "") + "-callname"
+       fs.writeFile(author + ".txt" , callme , function(err) {
+         console.log(err)
+       })
+       bot.createMessage(chat.channel.id, chat.author.mention + "ちゃんのことはこれから" + callme + "ちゃんって呼ぶね！");
+     }}
      if(chat.content.match(/ちゃんの言っていたこと/)) {
        readusername = chat.content.replace(/ちゃんの言っていたこと|<@|>|!| |/g, "")
        username = chat.content.replace("ちゃんの言っていたこと", "")
@@ -78,7 +97,6 @@ bot.on("messageCreate", (chat) => {
      }
 
      //--------------------------------------if u add
-   }
 });
 
 bot.on("guildMemberAdd", (joind, member) => {
