@@ -1,17 +1,16 @@
 //Erisが必須です。
 const Eris = require("eris");
-var bot = new Eris("")//Tokenのここですが少しいじらせてもらいました。
-var runch = ("")//ようこそ/さよならメッセージ送信先
-var online = ("")//オンライン役職のID
+var runch = ("310061082574323712")//ようこそ/さよならメッセージ送信先
+var online = ("320493645574963200")//オンライン役職のID
 var NotToDo = new Object
 var memo = new Object
+var tcpp = require('tcp-ping')
 var username = new Object
 require('date-utils');
 var fs = require('fs');
-/*
-↑の var doo = new Object 削除しましたがダメでしたら戻してください。
-*/
-
+var sleep = require('sleep-async')();
+var token = require("token.js")["token"]
+var bot = new Eris(token)
 bot.on("ready", () => {
     console.log("Botが起動したよ！レッツゴー！")//メッセージは変えられます(チャットしないです)
 });
@@ -20,7 +19,7 @@ bot.on("ready", () => {
 bot.on("messageCreate", (chat) => {
    if(chat.author.id == "367276131398844417") {
      console.log("ループ防止機能が作動したよ！")
-     } else {
+   } else {
      if(chat.content == "わーい！") {
        bot.createMessage(chat.channel.id, "たーのしー！")
      }
@@ -82,6 +81,9 @@ bot.on("messageCreate", (chat) => {
          bot.createMessage(chat.channel.id, username + "ちゃんが言ってたのは:「" + text + "」だよ！")
        }})
      }
+     if(chat.author.id == "354604237063323651") {
+       bot.createMessage(chat.channel.id, "あつもりっ！")
+     }
      //時間
      if(chat.content == "今何時?") {
        date = new Date();
@@ -94,10 +96,23 @@ bot.on("messageCreate", (chat) => {
       say = chat.content.replace("って言って", "")
       bot.createMessage(chat.channel.id, say)
      }
-     //--------------------------------------if u add
+     if(chat.content == ("サーバルちゃんは何のフレンズ?")) {
+       bot.createMessage(chat.channel.id, "くわしいことはGitHubにあるWikiをみてね！\nhttps://github.com/ser-valchan/ServalChanBot/wiki")
      }
+     if(chat.content.match(/ping /)) {
+       pingto = chat.content.replace(/ping| |http|https|ftp:|\//g, "")
+        tcpp.probe(pingto, 25565, function(err, available) {
+          console.log(err, available)
+          if(available === true) {
+             bot.createMessage(chat.channel.id, pingto + "ちゃんは元気だよ！")
+          } else {
+             bot.createMessage(chat.channel.id, pingto + "ちゃんは今寝てるね...")
+          }
+        });
+     }
+     //--------------------------------------この上に書いてください(ループ防止)
+  }
 });
-
 bot.on("guildMemberAdd", (joind, member) => {
   bot.createMessage(runch, member.mention + "さん、雑談用Discordようこそ！ \nまずは#welcomeチャンネルと公式Wikiを見てルールを確認してね！")//変更できます。
     member.addRole(online, "join")//joinって書いてある部分は理由です
