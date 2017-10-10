@@ -55,10 +55,14 @@ bot.on("messageCreate", (chat) => {
      if(chat.content.match(/ちゃんの言っていたこと/)) {
        readusername = chat.content.replace(/ちゃんの言っていたこと|<@|>|!| |/g, "")
        username = chat.content.replace("ちゃんの言っていたこと", "")
+
        fs.readFile(readusername + ".txt" , "utf8" , function(err, text) {
          console.log(err)
+         if(text == undefined) {
+           bot.createMessage(chat.channel.id, username + "ちゃんはまだ何も言ってないみたいだね...")
+         } else {
          bot.createMessage(chat.channel.id, username + "ちゃんが言ってたのは:「" + text + "」だよ！")
-       })
+       }})
      }
      //時間
      if(chat.content == "今何時?") {
