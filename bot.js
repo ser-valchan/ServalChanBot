@@ -53,7 +53,7 @@ bot.on("messageCreate", (chat) => {
        bot.createMessage(chat.channel.id, chat.author.mention + "ちゃんのメモ書き:" + memo + "を保存したよ！");
      }
      if(chat.content.match(/ちゃんの言っていたこと/)) {
-       readusername = chat.content.replace(/ちゃんの言っていたこと|<@|>|!/g, "")
+       readusername = chat.content.replace(/ちゃんの言っていたこと|<@|>|!| |/g, "")
        username = chat.content.replace("ちゃんの言っていたこと", "")
        fs.readFile(readusername + ".txt" , "utf8" , function(err, text) {
          console.log(err)
