@@ -1,8 +1,8 @@
 //Erisが必須です。
 const Eris = require("eris");
-var bot = new Eris("MzY2NzcxNjA3MzQ1MTY4Mzg2.DLx6Fw.wgqOWTxnJLABY-69o7MOWf2I9i8")//Tokenのここですが少しいじらせてもらいました。
-var runch = ("310061082574323712")//ようこそ/さよならメッセージ送信先
-var online = ("320493645574963200")//オンライン役職のID
+var bot = new Eris("")//Tokenのここですが少しいじらせてもらいました。
+var runch = ("")//ようこそ/さよならメッセージ送信先
+var online = ("")//オンライン役職のID
 var NotToDo = new Object
 var memo = new Object
 var username = new Object
@@ -18,7 +18,7 @@ bot.on("ready", () => {
 
 //Specific words→Specific words ここから
 bot.on("messageCreate", (chat) => {
-   if(chat.author.id == "366771607345168386") {
+   if(chat.author.id == "367276131398844417") {
      console.log("ループ防止機能が作動したよ！")
      } else {
      if(chat.content == "わーい！") {
@@ -28,7 +28,7 @@ bot.on("messageCreate", (chat) => {
        NotToDo.valve = chat.content.replace("ないでください！" , "")
        bot.createMessage(chat.channel.id, NotToDo.valve + "ないよ！")
      }
-     if(chat.content.match(/私は|のフレンズです/g)) {
+     if(chat.content.match(/のフレンズです/g)) {
        Friends = chat.content.replace(/私は|のフレンズです/g, "")
        readusername = chat.author.id.replace(/<@|>|!| |/g, "") + "-callname"
        fs.readFile(readusername + ".txt" , "utf8" , function(err, nick) {
@@ -39,7 +39,6 @@ bot.on("messageCreate", (chat) => {
              bot.createMessage(chat.channel.id, "すっごーい！" + nick + "ちゃんは" + Friends + "のフレンズなんだね！")
          }})
        }
-     }
      if(chat.content == "すっごーい") {
        bot.createMessage(chat.channel.id, "すごいすごーい！")
      }
@@ -95,8 +94,8 @@ bot.on("messageCreate", (chat) => {
       say = chat.content.replace("って言って", "")
       bot.createMessage(chat.channel.id, say)
      }
-
      //--------------------------------------if u add
+     }
 });
 
 bot.on("guildMemberAdd", (joind, member) => {
