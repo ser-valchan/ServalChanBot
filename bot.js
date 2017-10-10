@@ -2,6 +2,9 @@
 //🄫2017 servalchan All rights reserved.
 const Eris = require("eris");
 var runch = ("310061082574323712")//ようこそ/さよならメッセージ送信先
+var gid = "309932182690856960"
+var options = new Object
+var addid = ""
 var online = ("320493645574963200")//オンライン役職のID
 var NotToDo = new Object
 var memo = new Object
@@ -73,7 +76,6 @@ bot.on("messageCreate", (chat) => {
      if(chat.content.match(/ちゃんの言っていたこと/)) {
        readusername = chat.content.replace(/ちゃんの言っていたこと|<@|>|!| |/g, "")
        username = chat.content.replace("ちゃんの言っていたこと", "")
-
        fs.readFile(readusername + ".txt" , "utf8" , function(err, text) {
          console.log(err)
          if(text == undefined) {
@@ -145,7 +147,21 @@ bot.on("messageCreate", (chat) => {
      if(chat.content == "ぬるぽ") {
        bot.createMessage(chat.channel.id, "がっ！")
      }
+     //称号申請用(ここは作成のみ)
+     if(chat.content.match(/称号申請:/)) {
+       options.name = chat.content.replace("称号申請:", "")
+       bot.createRole(gid, options, "add_by_bot")
+       bot.createMessage(chat.channel.id, "できたよ！")
+       addid = chat.author.id
+     }
      //--------------------------------------この上に書いてください(ループ防止)
+  }
+});
+//称号申請用(前回称号申請でチャットした人に作成されたroleを付与)
+bot.on("guildRoleCreate", (guild, role) => {
+  if(addid != "") {
+    bot.addGuildMemberRole(guild.id, addid, role.id, "Bot Autoallocation")
+    addid = ""
   }
 });
 bot.on("guildMemberAdd", (joind, member) => {
