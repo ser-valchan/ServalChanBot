@@ -28,6 +28,10 @@ bot.on("messageCreate", (chat) => {
        NotToDo.valve = chat.content.replace("ないでください！" , "")
        bot.createMessage(chat.channel.id, NotToDo.valve + "ないよ！")
      }
+     if(chat.content.match(/私は|のフレンズです/g)) {
+       Friends = chat.content.replace(/私は|のフレンズです/g, "")
+       bot.createMessage(chat.channel.id, "すっごーい！あなたは"+ Friends + "のフレンズなんだね！")
+     }
      if(chat.content == "すっごーい") {
        bot.createMessage(chat.channel.id, "すごいすごーい！")
      }
