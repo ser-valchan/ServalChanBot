@@ -1,4 +1,5 @@
 //Erisが必須です。
+//🄫2017 servalchan All rights reserved.
 const Eris = require("eris");
 var runch = ("310061082574323712")//ようこそ/さよならメッセージ送信先
 var online = ("320493645574963200")//オンライン役職のID
@@ -84,6 +85,37 @@ bot.on("messageCreate", (chat) => {
      if(chat.author.id == "354604237063323651") {
        bot.createMessage(chat.channel.id, "あつもりっ！")
      }
+     //あっちむいてほい
+     if(chat.content == "じゃんけんぐー") {
+       randomNum = Math.floor( Math.random() * (3 + 1 - 1) ) + 1 ;
+       if(randomNum == 1){
+         bot.createMessage(chat.channel.id, "ぐー！\nあいこだね！")
+       } else if(randomNum == 2){
+         bot.createMessage(chat.channel.id, "ちょき！\nまけちゃった...あなたのかちだね！")
+       } else if(randomNum == 3){
+         bot.createMessage(chat.channel.id, "ぱー！\nやったー！わたしのかちだー！")
+       }
+     }
+     if(chat.content == "じゃんけんちょき") {
+       randomNum = Math.floor( Math.random() * (3 + 1 - 1) ) + 1 ;
+       if(randomNum == 1){
+         bot.createMessage(chat.channel.id, "ちょき！\nあいこだね！")
+       } else if(randomNum == 2){
+         bot.createMessage(chat.channel.id, "ぱー！\nまけちゃった...あなたのかちだね！")
+       } else if(randomNum == 3){
+         bot.createMessage(chat.channel.id, "ぐー！\nやったー！わたしのかちだー！")
+       }
+     }
+     if(chat.content == "じゃんけんぱー") {
+       randomNum = Math.floor( Math.random() * (3 + 1 - 1) ) + 1 ;
+       if(randomNum == 1){
+         bot.createMessage(chat.channel.id, "ぱー！\nあいこだね！")
+       } else if(randomNum == 2){
+         bot.createMessage(chat.channel.id, "ぐー！\nまけちゃった...あなたのかちだね！")
+       } else if(randomNum == 3){
+         bot.createMessage(chat.channel.id, "ちょき！\nやったー！わたしのかちだー！")
+       }
+     }
      //時間
      if(chat.content == "今何時?") {
        date = new Date();
@@ -109,6 +141,9 @@ bot.on("messageCreate", (chat) => {
              bot.createMessage(chat.channel.id, pingto + "ちゃんは今寝てるね...")
           }
         });
+     }
+     if(chat.content == "ぬるぽ") {
+       bot.createMessage(chat.channel.id, "がっ！")
      }
      //--------------------------------------この上に書いてください(ループ防止)
   }
