@@ -1,39 +1,42 @@
-//Erisが必須です。
-//🄫2017 servalchan All rights reserved.
-const Eris = require("eris");
-var runch = ("310061082574323712")//ようこそ/さよならメッセージ送信先
-var gid = "309932182690856960"
-var options = new Object
-var addid = ""
-var online = ("320493645574963200")//オンライン役職のID
-var NotToDo = new Object
-var memo = new Object
-var tcpp = require('tcp-ping')
-var username = new Object
+/*
+Copyright © 雑談用Discord Bot-Developer All rights reserved.
+要求モジュール:date-utils,tcp-ping,sleep-async,eris,node-cron
+*/
+const http = require('request');
 require('date-utils');
-var sleep = require('sleep-async');
-var fs = require('fs');
+const tcpp = require('tcp-ping')
+const sleep = require('sleep-async');
+const fs = require('fs');
+const Eris = require("eris");
+//変数定義
+var online = require("token.js")["onlineId"]
 var token = require("token.js")["token"]
-var bot = new Eris(token)
-var context = new Object
-var mode = new Object
-var level = "0"
-var opt = new Object
-var http = require('request');
+var runch = require("token.js")["defaultCh"]
+var gid = require("token.js")["guildId"]
+var docomoapikey = require("token.js")["docomokey"]
+    NotToDo = new Object
+    memo = new Object
+    options = new Object
+    username = new Object
+    context = new Object
+    mode = new Object
+    level = "0"
+    addid = ""
+    cronTime = "* * * * *"
+    opt = new Object
+    CronJob = require("cron").cronJob
+    bot = new Eris(token)
 bot.on("ready", () => {
-    console.log("Botが起動したよ！レッツゴー！")//メッセージは変えられます(チャットしないです)
+    console.log("Botが起動したよ！レッツゴー！")//メッセージは変えられます(ログ出力)
 });
 
 //Specific words→Specific words ここから
 bot.on("messageCreate", (chat) => {
-  console.log(chat.content, chat.author)
-  if(chat.author.id == "367276131398844417") {
-    console.log("わたしからのメッセージだよ！")
-  } else {
+  if(chat.author.bot == false) {
+    console.log("ループ防止機能が作動したよ！")
+    console.log("内容:", chat.content, "\n送信元:", chat.author.username, "(id:", chat.author.id, ")")
     if(chat.content == "わーい！") {
-      fs.appendFile(chat.author.id + "-level.txt" , "." , function(err) {
-       console.log("add exp,error:" + err)
-      })
+      fs.appendFile(chat.author.id + "-level.txt" , "." , function(err) { console.log("add exp,error:" + err)  })
       bot.createMessage(chat.channel.id, "たーのしー！")
     }
     if(chat.content.match (/.*?ないでください！/)) {
@@ -45,9 +48,8 @@ bot.on("messageCreate", (chat) => {
       bot.createMessage(chat.channel.id, NotToDo.valve + "ないよ！")
     }}
     if(chat.content.match(/.*?のフレンズです/g)) {
-      fs.appendFile(chat.author.id + "-level.txt" , "." , function(err) {
-       console.log("add exp,error:" + err)
-      })
+      fs.appendFile(chat.author.id + "-level.txt" , "." , function(err) { console.log("add exp,error:" + err)  })
+
       Friends = chat.content.replace(/私は|のフレンズです/g, "")
       readusername = chat.author.id.replace(/<@|>|!| |/g, "") + "-callname"
       fs.readFile(readusername + ".txt" , "utf8" , function(err, nick) {
@@ -59,55 +61,39 @@ bot.on("messageCreate", (chat) => {
         }})
       }
     if(chat.content == "すっごーい") {
-      fs.appendFile(chat.author.id + "-level.txt" , "." , function(err) {
-       console.log("add exp,error:" + err)
-      })
+      fs.appendFile(chat.author.id + "-level.txt" , "." , function(err) { console.log("add exp,error:" + err)  })
       bot.createMessage(chat.channel.id, "すごいすごーい！")
     }
     if(chat.content == "歌って") {
-      fs.appendFile(chat.author.id + "-level.txt" , "." , function(err) {
-       console.log("add exp,error:" + err)
-      })
+      fs.appendFile(chat.author.id + "-level.txt" , "." , function(err) { console.log("add exp,error:" + err)  })
       bot.createMessage(chat.channel.id, "<@!242183143564640258>ちゃん、" + chat.author.mention + "ちゃんが歌ってって言ってるよ！早く歌ってよー！")
     }
-    //ここまでのif-thenの中身は消してくださってかまいません。
     if(chat.content == ("私は何のフレンズ")) {
-      fs.appendFile(chat.author.id + "-level.txt" , "." , function(err) {
-       console.log("add exp,error:" + err)
-      })
+      fs.appendFile(chat.author.id + "-level.txt" , "." , function(err) { console.log("add exp,error:" + err)  })
       bot.createMessage(chat.channel.id, "あなたの名前は" + chat.author.mention + "だよ！アイコンは...これかな?" + chat.author.avatarURL)
     }
     //メモ機能(記録しちゃおうぜてきな)
     if(chat.content.match(/これを覚えて:.*?/)) {
-      fs.appendFile(chat.author.id + "-level.txt" , "." , function(err) {
-       console.log("add exp,error:" + err)
-      })
+      fs.appendFile(chat.author.id + "-level.txt" , "." , function(err) { console.log("add exp,error:" + err)  })
       memo = chat.content.replace("これを覚えて:", "")
       author = chat.author.mention.replace(/<@|>/g, "")
-
       fs.writeFile(author + ".txt" , memo , function(err) {
         console.log(err)
       })
       bot.createMessage(chat.channel.id, chat.author.mention + "ちゃんのメモ書き:" + memo + "を保存したよ！");
     }
     if(chat.content.match(/.*?って呼んで/)) {
-      fs.appendFile(chat.author.id + "-level.txt" , "." , function(err) {
-       console.log("add exp,error:" + err)
-      })
+      fs.appendFile(chat.author.id + "-level.txt" , "." , function(err) { console.log("add exp,error:" + err)  })
       callme = chat.content.replace("って呼んで", "")
       if(memo == "って呼んで") {
         bot.createMessage(chat.channel.id, "ちゃんとした名前を教えて！")
       } else {
       author = chat.author.mention.replace(/<@|>/g, "") + "-callname"
-      fs.writeFile(author + ".txt" , callme , function(err) {
-        console.log(err)
-      })
+      fs.writeFile(author + ".txt" , callme , function(err) { console.log(err) })
       bot.createMessage(chat.channel.id, chat.author.mention + "ちゃんのことはこれから" + callme + "ちゃんって呼ぶね！");
     }}
     if(chat.content.match(/.*?ちゃんの言っていたこと/)) {
-      fs.appendFile(chat.author.id + "-level.txt" , "." , function(err) {
-       console.log("add exp,error:" + err)
-      })
+      fs.appendFile(chat.author.id + "-level.txt" , "." , function(err) { console.log("add exp,error:" + err)  })
       readusername = chat.content.replace(/ちゃんの言っていたこと|<@|>|!| |/g, "")
       username = chat.content.replace("ちゃんの言っていたこと", "")
       fs.readFile(readusername + ".txt" , "utf8" , function(err, text) {
@@ -118,10 +104,7 @@ bot.on("messageCreate", (chat) => {
         bot.createMessage(chat.channel.id, username + "ちゃんが言ってたのは:「" + text + "」だよ！")
       }})
     }
-    if(chat.author.id == "354604237063323651") {
-      bot.createMessage(chat.channel.id, "あつもりっ！")
-    }
-    //あっちむいてほい
+    //あっちむいてほいやろうとしたらじゃんけんになってたやつ
     if(chat.content == "じゃんけんぐー") {
       fs.appendFile(chat.author.id + "-level.txt" , "." , function(err) {
        console.log("add exp,error:" + err)
@@ -149,9 +132,7 @@ bot.on("messageCreate", (chat) => {
       }
     }
     if(chat.content == "じゃんけんぱー") {
-      fs.appendFile(chat.author.id + "-level.txt" , "." , function(err) {
-       console.log("add exp,error:" + err)
-      })
+      fs.appendFile(chat.author.id + "-level.txt" , "." , function(err) { console.log("add exp,error:" + err)  })
       randomNum = Math.floor( Math.random() * (3 + 1 - 1) ) + 1 ;
       if(randomNum == 1){
         bot.createMessage(chat.channel.id, "ぱー！\nあいこだね！")
@@ -163,9 +144,7 @@ bot.on("messageCreate", (chat) => {
     }
     //時間
     if(chat.content == "今何時?") {
-      fs.appendFile(chat.author.id + "-level.txt" , "." , function(err) {
-       console.log("add exp,error:" + err)
-      })
+      fs.appendFile(chat.author.id + "-level.txt" , "." , function(err) { console.log("add exp,error:" + err)  })
       date = new Date();
       hh = date.toFormat("HH24");
       mi = date.toFormat("MI")
@@ -173,25 +152,19 @@ bot.on("messageCreate", (chat) => {
       bot.createMessage(chat.channel.id, "今は" + hh + ":" + mi + ":" + ss + "だよ！")
     }
     if(chat.content.match(/サーバルちゃん、.*?って言って/)) {
-      fs.appendFile(chat.author.id + "-level.txt" , "." , function(err) {
-       console.log("add exp,error:" + err)
-      })
-     say = chat.content.replace(/って言って|サーバルちゃん、/g, "")
+      fs.appendFile(chat.author.id + "-level.txt" , "." , function(err) { console.log("add exp,error:" + err)  })
+     say = chat.content.replace(/って言って|サーバルちゃん、|死ね|消えろ/g, "")
      fs.appendFile(chat.author.id + "-level.txt" , "." , function(err) {
       console.log("add exp,error:" + err)
      })
      bot.createMessage(chat.channel.id, say)
     }
     if(chat.content == ("サーバルちゃんは何のフレンズ?")) {
-      fs.appendFile(chat.author.id + "-level.txt" , "." , function(err) {
-       console.log("add exp,error:" + err)
-      })
+      fs.appendFile(chat.author.id + "-level.txt" , "." , function(err) { console.log("add exp,error:" + err)  })
       bot.createMessage(chat.channel.id, "くわしいことはGitHubにあるWikiをみてね！\nhttps://github.com/ser-valchan/ServalChanBot/wiki")
     }
     if(chat.content.match(/ping /)) {
-      fs.appendFile(chat.author.id + "-level.txt" , "." , function(err) {
-       console.log("add exp,error:" + err)
-      })
+      fs.appendFile(chat.author.id + "-level.txt" , "." , function(err) { console.log("add exp,error:" + err)  })
       pingto = chat.content.replace(/ping| |http|https|ftp:|\//g, "")
        tcpp.probe(pingto, 25565, function(err, available) {
          console.log(err, available)
@@ -203,33 +176,24 @@ bot.on("messageCreate", (chat) => {
        });
     }
     if(chat.content == "ぬるぽ") {
-      fs.appendFile(chat.author.id + "-level.txt" , "." , function(err) {
-       console.log("add exp,error:" + err)
-      })
+      fs.appendFile(chat.author.id + "-level.txt" , "." , function(err) { console.log("add exp,error:" + err)  })
       bot.createMessage(chat.channel.id, "がっ！")
     }
     //称号申請用(ここは作成のみ)
     if(chat.content.match(/称号申請:.*?/)) {
-      if(chat.content.match(/color=.*?/)) {
+      if(chat.content.match(/ color=.*?/)) {
          cc = chat.content
          opt.color = chat.content.replace(/称号申請:.*? -color=/, "0x")
          console.log("[" + opt.color + "]")
          opt.color = parseInt(opt.color, 16)
       } else {
-        opt.color = parseInt("ffffff", 16)
+        opt.color = null
       }
+      if(chat.content.match(/ mentionable=true/)) { opt.mentionable = true } else { opt.mentionable = false }
       opt.name = cc.replace(/称号申請:| -color=.*/g, "")
       bot.createRole(gid, opt, "add_by_bot")
       bot.createMessage(chat.channel.id, "できたよ！")
       addid = chat.author.id
-    }
-    if(chat.content.match(/debug!delrole/)) {
-      removeid = chat.content.replace(/debug!delrole| /g, "")
-      if(chat.author.id == "239201921917911041") {
-        bot.deleteRole(gid, removeid, "By bot")
-        console.log(gid, removeid, "By bot")
-        bot.createMessage(chat.channel.id, "さくじょにせいこうしたよ！")
-      }
     }
     if(chat.content == "今のレベルは") {
       fs.appendFile(chat.author.id + "-level.txt" , "." , function(err) {
@@ -242,19 +206,8 @@ bot.on("messageCreate", (chat) => {
         bot.createMessage(chat.channel.id, chat.author.mention + "ちゃんのレベルは" +  Math.floor(level.length /10) + "だよ！\n経験値は" + level.length + "だよ！")
       })
     }
-    //熱盛反応
-    if(chat.content.match(/あつもり|熱盛|:atsumori:/g)) {
-      RND = Math.floor( Math.random() * (100 + 1 - 1) ) + 1 ;
-      if(RND == 150) {
-        bot.createMessage(chat.channel.id, "つかれちゃった...でもがんばらないとね！")
-      } else {
-        bot.createMessage(chat.channel.id, "**あつもりっ！**")
-      }
-    }
     if(chat.content.match(/ニコニコ動画で.*?を検索して/)) {
-      fs.appendFile(chat.author.id + "-level.txt" , "." , function(err) {
-       console.log("add exp,error:" + err)
-      })
+      fs.appendFile(chat.author.id + "-level.txt" , "." , function(err) { console.log("add exp,error:" + err)  })
       q = chat.content.replace(/ニコニコ動画で|を検索して/g, "")
       qs = "「" + q + "」"
       q = encodeURIComponent(q)
@@ -270,9 +223,7 @@ bot.on("messageCreate", (chat) => {
       });
     }
     if(chat.content.match(/ニコニコ静画で.*?を検索して/)) {
-      fs.appendFile(chat.author.id + "-level.txt" , "." , function(err) {
-       console.log("add exp,error:" + err)
-      })
+      fs.appendFile(chat.author.id + "-level.txt" , "." , function(err) { console.log("add exp,error:" + err)  })
       q = chat.content.replace(/ニコニコ静画で|を検索して/g, "")
       qs = "「" + q + "」"
       q = encodeURIComponent(q)
@@ -287,11 +238,12 @@ bot.on("messageCreate", (chat) => {
         bot.createMessage(chat.channel.id, body + "'''けんさくけっかはここまで```けんさくけっかをもっとみるときは http://seiga.nicovideo.jp/search/" + q + "?target=illust でみれるよ！");
       });
     }
+    //AI機能
     if(chat.content.match(/serval!AI .*?/)) {
       word = chat.content.replace("serval!AI ", "")
       postplace = "東京"
       var options = {
-        url: 'https://api.apigw.smt.docomo.ne.jp/dialogue/v1/dialogue?APIKEY=',//'APIKEY='以降にdocomo developer centerで取得したClient Keyを入れる
+        url: 'https://api.apigw.smt.docomo.ne.jp/dialogue/v1/dialogue?APIKEY=' + docomoapikey,
           json: {
             utt: word,
             place: postplace,
@@ -302,14 +254,13 @@ bot.on("messageCreate", (chat) => {
       http.post(options, function(err, response, body) {
         context = body.context
         mode = body.mode
-        bot.createMessage(chat.channel.id, "AI:" + body.utt)
+      bot.createMessage(chat.channel.id, "AI:" + body.utt)
       });
     }
     //--------------------------------------この上に書いてください(ループ防止)
  }
 });
 //称号申請用(前回称号申請でチャットした人に作成されたroleを付与)
-}
 bot.on("guildRoleCreate", (guild, role) => {
   if(addid != "") {
     bot.addGuildMemberRole(guild.id, addid, role.id, "Bot Autoallocation")
@@ -327,3 +278,21 @@ bot.on("guildMemberRemove", (guild, member) => {
     bot.createMessage(runch, member.mention + "さんが退出しました。 \n今までありがとう！また来てね！");//変更できます。
 });
 bot.connect();
+
+var CronJob = require('cron').CronJob;
+new CronJob('00 00,15,30,45 * * * *', function() {
+    date = new Date();
+    hh = date.toFormat("HH24");
+    mi = date.toFormat("MI");
+    bot.createMessage(runch, "サーバルキャットのサーバルが、" + hh + "時" + mi + "分をおしらせするよ！");
+    console.log("定期メッセージ(時報)")
+}, null, true);
+
+var CronJob = require('cron').CronJob;
+new CronJob('00 00 00 * * *', function() {
+    date = new Date();
+    mm = date.toFormat("MM");
+    dd = date.toFormat("DD");
+    bot.createMessage(runch, "サーバルキャットのサーバルが、" + mm + "月" + dd + "日になったことをおしらせするよ！");
+    console.log("定期メッセージ(時報)")
+}, null, true);
